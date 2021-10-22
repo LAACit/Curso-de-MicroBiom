@@ -1,0 +1,56 @@
+Con el codigo del programa21.pl obtuvimos los codones de incio que no son ATG. Sin embargo, no conocemos cuales son, no sabemos si son ATC GGG etc. Para poder reconocer el tipo de codon vamos a utilizar a la consola de Linux. 
+
+1) Corremos el programa21.pl para visualizar nuestros datos 
+
+obtenemos una respues del este tipo 
+
+GI: 16132206
+ predicted repair protein [Escherichia coli K12]
+g t g
+GI: 16132208
+ fused predicted transporter subunits of ABC superfamily: ATP-binding components [Escherichia coli K12]
+g t g
+GI: 90111747
+ lytic murein transglycosylase, soluble [Escherichia coli K12]
+g t g
+
+
+vemos que tiene el identificador GI, la función de la proteina  y el codon de inicio. Vamos a eliminar el GI y la función para obtener sólo los codones de inicio 
+
+Usando consola
+
+1) Primero redireccionamos la salida de program21.pl a un archivo de texto . txt usando >
+
+perl porgrama21.pl > salidaprog21.txt 
+
+
+2) vefificamos que se realizo de manera correcta con Car
+
+
+cat salidaprog21.txt
+
+
+3) Una vez que verificada la salida vamos a usar GREP -v para eleliminar las lineas que no nos interesan. 
+
+En este caso las lineas que no queremos tienen los patrones "GI" y K12. Usamos esos patrones para quitar lineas y usamos | para que se conecten las dos ordenes. 
+
+grep -v GI   salidaprog21.txt| grep -v K12  |
+
+
+4) Verificamos que sólo quedan codones. Ahora vamos a ordenarlos en orden alfabetico con SORT y vamos a contar la frecuencia de cada codon con UNIQ -C. 
+
+Podemos usar | para conectar con el paso anterior 
+
+grep -v GI   salidaprog21.txt| grep -v K12  | grep -v ':' |sort|uniq -c
+
+5) obtenemos la siguiente salida 
+
+
+
+  3 
+      2 a t t
+      1 c t g
+    370 g t g
+     74 t t g
+
+LISTO, ya tenemos identificados los NoATG y su frecuencia :) 
